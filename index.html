@@ -1,0 +1,855 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game gabut 💗 isna hihihi</title>
+
+<style>
+:root {
+  --pink: #ff438e;
+  --purple: #9258e8;
+  --dark: #55204f;
+  --light: #fff2f8;
+}
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  color: var(--dark);
+  background:
+    radial-gradient(circle at 10% 10%, #ffd5e8, transparent 35%),
+    linear-gradient(135deg, #fff5fb, #f1e6ff);
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 6%;
+  background: #ffffffc9;
+  border-bottom: 1px solid #f7c9e0;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  backdrop-filter: blur(12px);
+}
+.logo {
+  color: var(--pink);
+  font-size: 24px;
+  font-weight: 900;
+}
+.player-mini {
+  font-size: 12px;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 15px;
+  border: 1px solid #ffd1e5;
+  text-align: center;
+}
+main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 24px 16px 50px;
+}
+.screen { display: none; }
+.screen.active { display: block; animation: appear .3s ease; }
+@keyframes appear {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero {
+  text-align: center;
+  padding: 35px 10px;
+}
+.hero h1 {
+  font-size: clamp(38px, 8vw, 65px);
+  margin: 12px 0;
+  color: var(--pink);
+  text-shadow: 2px 3px #ffcce2;
+}
+.hero p { line-height: 1.7; }
+.big-heart {
+  font-size: 60px;
+  animation: beat 1s infinite;
+}
+@keyframes beat {
+  50% { transform: scale(1.15); }
+}
+.panel {
+  background: #ffffffdf;
+  border: 1px solid #ffd0e5;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 12px 35px #a84d8712;
+  margin-bottom: 18px;
+}
+.narrow { max-width: 480px; margin: 0 auto 20px; }
+h2 { text-align: center; margin-top: 0; }
+input {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border: 1px solid #f4b6d6;
+  border-radius: 13px;
+  background: white;
+  outline-color: var(--pink);
+}
+.btn {
+  border: 0;
+  padding: 12px 18px;
+  border-radius: 14px;
+  color: white;
+  background: linear-gradient(110deg, var(--pink), #ff72b0);
+  font-weight: bold;
+  box-shadow: 0 5px 12px #ff438e26;
+  transition: .2s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn.purple {
+  background: linear-gradient(110deg, #8750db, #b078f1);
+}
+.btn.light {
+  color: var(--dark);
+  background: white;
+  border: 1px solid #f1c4df;
+  box-shadow: none;
+}
+.btn.full { width: 100%; margin-top: 8px; }
+.center { text-align: center; }
+.muted { color: #956a8c; font-size: 14px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.menu-card {
+  background: white;
+  border: 1px solid #f8cce3;
+  border-radius: 20px;
+  padding: 22px 10px;
+  text-align: center;
+  transition: .2s;
+  color: var(--dark);
+  cursor: pointer;
+}
+.menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 22px #b15c901b;
+}
+.menu-card .emoji { font-size: 37px; }
+.menu-card h3 { margin: 10px 0 5px; font-size: 16px; }
+.menu-card p { margin: 0; font-size: 12px; line-height: 1.5; }
+.game-title { text-align: center; margin-bottom: 20px; }
+.game-title h2 { color: var(--pink); margin-bottom: 6px; }
+.question-card {
+  text-align: center;
+  background: linear-gradient(135deg, #fff0f7, #f4edff);
+  border: 1px dashed #f3a4cd;
+  border-radius: 22px;
+  padding: 28px 18px;
+  margin: 18px 0;
+  min-height: 165px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.question-card .emoji { font-size: 42px; }
+.question-card p {
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1.6;
+  margin: 12px 0 0;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+.scoreboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 18px 0;
+}
+.scorebox {
+  background: white;
+  padding: 14px;
+  text-align: center;
+  border-radius: 15px;
+  border: 1px solid #f5c5de;
+}
+.score-number { color: var(--pink); font-size: 25px; font-weight: bold; }
+.wheel-wrap {
+  width: min(300px, 75vw);
+  margin: 25px auto;
+  position: relative;
+}
+.pointer {
+  position: absolute;
+  z-index: 2;
+  top: -12px;
+  left: calc(50% - 15px);
+  width: 0; height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 28px solid #6e348a;
+}
+.wheel {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 7px solid white;
+  outline: 3px solid #f3a3ce;
+  background: conic-gradient(
+    #ff609f 0deg 60deg,
+    #ffbd55 60deg 120deg,
+    #a4e5ce 120deg 180deg,
+    #9d83ff 180deg 240deg,
+    #67c6ff 240deg 300deg,
+    #ff9bba 300deg 360deg
+  );
+  position: relative;
+  transition: transform 4s cubic-bezier(.12,.72,.12,1);
+  box-shadow: 0 10px 25px #8e478b26;
+}
+.wheel-label {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  top: 0;
+  left: 0;
+  transform-origin: bottom center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 17%;
+  color: #55204f;
+  font-size: 12px;
+  font-weight: 900;
+}
+.wheel-label:nth-child(1) { transform: rotate(30deg); }
+.wheel-label:nth-child(2) { transform: rotate(90deg); }
+.wheel-label:nth-child(3) { transform: rotate(150deg); }
+.wheel-label:nth-child(4) { transform: rotate(210deg); }
+.wheel-label:nth-child(5) { transform: rotate(270deg); }
+.wheel-label:nth-child(6) { transform: rotate(330deg); }
+.wheel-center {
+  position: absolute;
+  width: 48px; height: 48px;
+  top: calc(50% - 24px);
+  left: calc(50% - 24px);
+  border-radius: 50%;
+  background: white;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  z-index: 1;
+  border: 3px solid #ffb8d9;
+}
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+.answers button { min-height: 48px; }
+.progress {
+  height: 8px;
+  background: #f5d7e8;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 18px 0;
+}
+.progress div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--pink), var(--purple));
+  width: 0%;
+  transition: .3s;
+}
+footer { text-align: center; padding: 20px; color: #986b8f; font-size: 12px; }
+
+@media (max-width: 650px) {
+  header { padding: 12px; }
+  .logo { font-size: 20px; }
+  .player-mini { font-size: 10px; padding: 7px; }
+  main { padding: 15px 12px 35px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .menu-card { padding: 17px 7px; }
+  .panel { padding: 18px; }
+  .question-card p { font-size: 18px; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo">💗 Game isna yaya</div>
+  <div class="player-mini" id="mini1">Kamu · 0 poin</div>
+  <div class="player-mini" id="mini2">Pasangan · 0 poin</div>
+</header>
+
+<main>
+  <!-- HALAMAN AWAL -->
+  <section id="home" class="screen active">
+    <div class="hero">
+      <div class="big-heart">💞</div>
+      <h1>Game isna yaya</h1>
+      <h2>Game Seru untuk aku ro yaya</h2>
+      <p>Main bareng, ketawa bareng,<br>makin sayang hihuu! ✨</p>
+    </div>
+    <div class="panel narrow">
+      <h2>💌 Isi nama!</h2>
+      <input id="name1" maxlength="24" placeholder="Nama kamu">
+      <input id="name2" maxlength="24" placeholder="Nama pasangan">
+      <button class="btn full" onclick="startGame()">Mulai Petualangan 💖</button>
+      <p class="muted center">Siapkan hati, jangan siapkan alasan kalah! 😂</p>
+    </div>
+  </section>
+
+  <!-- MENU UTAMA -->
+  <section id="menu" class="screen">
+    <div class="hero" style="padding:10px">
+      <h1 style="font-size:42px">Hai, Yaya Isna! 💕</h1>
+      <p>Isna cantik imoet princess gondang</p>
+    </div>
+    <div class="grid">
+      <div class="menu-card" onclick="openGame('wheel')">
+        <div class="emoji">🎡</div><h3>Roda Keberuntungan</h3>
+        
+      </div>
+      <div class="menu-card" onclick="openGame('truth')">
+        <div class="emoji">💬</div><h3>Truth or Dare</h3>
+        
+      </div>
+      <div class="menu-card" onclick="openGame('quiz')">
+        <div class="emoji">🧩</div><h3>Cocokologi</h3>
+       
+      </div>
+      <div class="menu-card" onclick="openGame('romance')">
+        <div class="emoji">💌</div><h3>Kartu Romantis</h3>
+       
+      </div>
+      <div class="menu-card" onclick="openGame('dare')">
+        <div class="emoji">🔥</div><h3>Misi Bucin</h3>
+        
+      </div>
+      <div class="menu-card" onclick="openGame('punish')">
+        <div class="emoji">😂</div><h3>Hukuman Acak</h3>
+       
+      </div>
+    </div>
+    <div class="panel" style="margin-top:20px">
+      <h2>🏆 Papan Skor Isna vs Yaya</h2>
+      <div class="scoreboard">
+        <div class="scorebox"><div id="scoreName1">Kamu</div><div class="score-number" id="score1">0</div></div>
+        <div class="scorebox"><div id="scoreName2">Pasangan</div><div class="score-number" id="score2">0</div></div>
+      </div>
+      <p class="muted center">Yang menang dapet cium 1000x WAJIB hahahahah</p>
+      <div class="center">
+        <button class="btn light" onclick="changeNames()">Ganti Nama</button>
+        <button class="btn light" onclick="resetAll()">Reset Skor</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="play" class="screen">
+    <div class="game-title">
+      <h2 id="gameTitle">Permainan</h2>
+      <p class="muted" id="turnLabel"></p>
+    </div>
+
+    <div class="panel">
+      <div id="wheelArea" class="hidden">
+        <div class="wheel-wrap">
+          <div class="pointer"></div>
+          <div id="wheel" class="wheel">
+            <div class="wheel-label">Truth</div>
+            <div class="wheel-label">Dare</div>
+            <div class="wheel-label">Hukuman</div>
+            <div class="wheel-label">Misi</div>
+            <div class="wheel-label">Romantis</div>
+            <div class="wheel-label">Bonus</div>
+          </div>
+          <div class="wheel-center">💗</div>
+        </div>
+        <div class="center">
+          <button id="spinBtn" class="btn" onclick="spinWheel()">Putar Roda 🎡</button>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <div class="emoji" id="cardEmoji">💌</div>
+        <p id="question">Siap bermain?</p>
+      </div>
+
+      <div id="quizArea" class="hidden">
+        <div class="progress"><div id="progressBar"></div></div>
+        <p class="center muted" id="quizProgress"></p>
+        <div class="answers" id="answers"></div>
+      </div>
+
+      <div id="standardActions" class="actions">
+        <button class="btn" onclick="drawCard()">Ambil Kartu 🎲</button>
+        <button class="btn purple" onclick="completeTask()">Selesai! +1 💖</button>
+        <button class="btn light" onclick="skipTask()">Lewati</button>
+      </div>
+      <div id="quizActions" class="actions hidden">
+        <button class="btn light" onclick="exitQuiz()">Keluar dari Kuis</button>
+      </div>
+      <div class="center" style="margin-top:20px">
+        <button class="btn light" onclick="showScreen('menu')">← Kembali ke Menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HASIL -->
+  <section id="result" class="screen">
+    <div class="hero">
+      <div class="big-heart">🏆</div>
+      <h1 style="font-size:43px">Love Champions!</h1>
+      <p id="resultText">Kalian luar biasa!</p>
+    </div>
+    <div class="panel narrow">
+      <div class="scoreboard">
+        <div class="scorebox"><div id="resultName1"></div><div class="score-number" id="resultScore1">0</div></div>
+        <div class="scorebox"><div id="resultName2"></div><div class="score-number" id="resultScore2">0</div></div>
+      </div>
+      <button class="btn full" onclick="showScreen('menu')">Main Lagi 💗</button>
+      <button class="btn light full" onclick="resetAll()">Mulai dari Awal</button>
+    </div>
+  </section>
+</main>
+<footer>Dibuat oleh isna mergo gabut</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let names = ["Kamu", "Pasangan"];
+let scores = [0, 0];
+let turn = 0;
+let mode = "truth";
+let currentCard = "";
+let busy = false;
+let wheelRotation = 0;
+let quizIndex = 0;
+let quizPoints = 0;
+let quizAnswered = false;
+
+const cards = {
+  truth: {
+    emoji: "💬",
+    title: "Truth or Dare",
+    items: [
+    
+      "Apa kesan pertamamu saat melihatku?",
+      "Siapa yang pertama kali tertarik?",
+      "Apa kebiasaanku yang paling kamu suka?",
+      "Apa kebiasaanku yang paling bikin gemas?",
+      "Siapa yang paling sering kangen duluan?",
+      "Apa hal paling romantis yang pernah kulakukan?",
+      "Apa panggilan sayang favoritmu untukku?",
+      "Pernahkah kamu cemburu karena hal sepele?",
+      "Siapa yang lebih sering minta perhatian?",
+      "Apa hal yang membuatmu merasa disayang?",
+      "Kalau aku ngambek, apa yang biasanya kamu pikirkan?",
+      "Apa kenangan kita yang ingin kamu ulang?",
+      "Siapa yang paling susah menahan tawa?",
+      "Apa hal paling lucu yang pernah kulakukan?",
+      "Apa hadiah sederhana yang paling kamu inginkan dariku?",
+      "Pernahkah kamu pura-pura tidak kangen?",
+      "Siapa yang paling sering memulai obrolan?",
+      "Apa hal yang ingin lebih sering kita lakukan bersama?",
+      "Apa yang paling kamu takutkan dalam hubungan?",
+      "Apa yang membuatmu percaya kepadaku?",
+      "Kalau aku jadi karakter kartun, aku jadi siapa?",
+      "Siapa yang paling manja saat sedang sakit?",
+      "Apa chat dariku yang paling kamu tunggu?",
+      "Apa hal kecil dariku yang selalu kamu ingat?",
+      "Siapa yang paling sering lupa waktu saat ngobrol?",
+      "Apa kebohongan kecil yang pernah kamu lakukan agar tidak membuatku khawatir?",
+      "Apa satu hal yang ingin kamu perbaiki dalam hubungan kita?",
+      "Kapan kamu merasa paling dekat denganku?",
+      "Apa yang ingin kamu capai bersama denganku?",
+      "Dari 1–10, seberapa bucin kamu hari ini?"
+    ]
+  },
+
+  dare: {
+    emoji: "🔥",
+    title: "Misi Bucin",
+    items: [
+      "Gombali pasangan selama 30 detik!",
+      "Nyanyikan lagu cinta selama 15 detik.",
+      "Buat pantun cinta dalam 20 detik.",
+      "Tatap mata pasangan selama 10 detik tanpa tertawa.",
+      "Tirukan gaya pasangan saat sedang ngambek!",
+      "Sebutkan 5 hal yang kamu suka dari pasangan.",
+      "Buat gombalan paling receh yang kamu bisa.",
+      "Bicara seperti robot selama satu putaran.",
+      "Buat ekspresi paling lucu selama 10 detik.",
+      "Ucapkan aku sayang kamu dengan gaya pembawa berita.",
+      "Ceritakan pertemuan pertama kalian seperti film drama.",
+      "Buat nama panggilan baru untuk pasangan.",
+      "Nyanyikan lagu favorit pasangan.",
+      "Lakukan tarian lucu selama 15 detik.",
+      "Tirukan cara pasangan tertawa.",
+      "Buat pidato kenapa pasanganmu layak mendapat penghargaan.",
+      "Sebutkan 3 hal yang membuat pasanganmu unik.",
+      "Buat iklan lucu untuk mempromosikan pasanganmu.",
+      "Bicaralah dengan suara imut selama 30 detik.",
+      "Ceritakan kisah cinta kalian dalam 3 kalimat.",
+      "Buat pantun yang menyebut nama pasangan.",
+      "Tebak makanan favorit pasangan dalam 3 kali percobaan.",
+      "Katakan 3 pujian tanpa mengulang kata.",
+      "Buat slogan untuk hubungan kalian.",
+      "Berakting seperti baru pertama kali jatuh cinta.",
+      "Ucapkan rayuan tanpa tertawa selama 20 detik.",
+      "Buat pose foto pasangan paling kocak.",
+      "Sebutkan 5 hal dalam 10 detik yang mengingatkanmu kepadaku.",
+      "Jelaskan kenapa pasanganmu spesial seperti sedang presentasi.",
+      "Buat ucapan selamat pagi paling romantis."
+    ]
+  },
+
+  punish: {
+    emoji: "😂",
+    title: "Hukuman Acak",
+    items: [
+      "Hukuman: Gombali pasangan sampai dia tertawa!",
+      "Hukuman: Tertawa seperti penjahat film selama 10 detik.",
+      "Hukuman: Nyanyikan lagu anak-anak dengan serius.",
+      "Hukuman: Buat pantun cinta yang paling absurd.",
+      "Hukuman: Tirukan suara kucing selama 10 detik.",
+      "Hukuman: Berpidato meminta maaf karena kalah.",
+      "Hukuman: Sebut pasangan sebagai bos besar selama satu ronde.",
+      "Hukuman: Buat wajah paling jelek selama 5 detik.",
+      "Hukuman: Berikan 5 pujian tulus kepada pasangan.",
+      "Hukuman: Bicara seperti presenter berita selama 30 detik.",
+      "Hukuman: Buat yel-yel kemenangan untuk pasangan.",
+      "Hukuman: Tiru gaya orang sedang jatuh cinta.",
+      "Hukuman: Buat puisi cinta dengan kata 'bakso'.",
+      "Hukuman: Ucapkan alfabet dengan gaya penyanyi opera.",
+      "Hukuman: Ceritakan lelucon sampai pasangan tertawa.",
+      "Hukuman: Buat iklan untuk sandal pasangan.",
+      "Hukuman: Sebutkan 3 alasan pasangan lebih hebat darimu.",
+      "Hukuman: Berakting seperti sedang memenangkan piala.",
+      "Hukuman: Buat suara alarm selama 5 detik.",
+      "Hukuman: Ucapkan namamu dengan 3 gaya berbeda.",
+      "Hukuman: Rayu pasangan seperti tokoh sinetron.",
+      "Hukuman: Buat berita tentang siapa yang paling bucin.",
+      "Hukuman: Sebutkan 5 benda berwarna pink dalam 10 detik.",
+      "Hukuman: Buat slogan lucu untuk pasangan.",
+      "Hukuman: Bicaralah seperti karakter kartun selama 30 detik.",
+      "Hukuman: Berikan gelar paling kocak kepada pasangan.",
+      "Hukuman: Buat pantun dengan kata cinta, mie, dan kucing.",
+      "Hukuman: Peragakan emoji favoritmu tanpa bicara.",
+      "Hukuman: Ceritakan kegiatan hari ini seperti komentator bola.",
+      "Hukuman: Puji pasangan dengan gaya seorang raja atau ratu."
+    ]
+  },
+
+  romance: {
+    emoji: "💌",
+    title: "Kartu Romantis",
+    items: [
+      "Kapan kamu merasa paling disayang olehku?",
+      "Apa arti hubungan yang sehat menurutmu?",
+      "Apa impian yang ingin kita wujudkan bersama?",
+      "Apa bentuk perhatian kecil yang paling berarti bagimu?",
+      "Apa lagu yang mengingatkanmu kepadaku?",
+      "Kalau hubungan kita sebuah film, apa judulnya?",
+      "Apa kenangan kita yang paling berharga?",
+      "Apa yang ingin kamu lakukan saat kita bertemu lagi?",
+      "Apa hal yang membuatmu bangga kepadaku?",
+      "Apa cara terbaik untuk menghiburmu saat sedih?",
+      "Apa bahasa cinta yang paling kamu sukai?",
+      "Apa tempat yang ingin kamu kunjungi bersamaku?",
+      "Apa hal sederhana yang ingin kita lakukan setiap minggu?",
+      "Apa yang membuatmu merasa aman dalam hubungan?",
+      "Apa satu hal yang ingin kamu pelajari dariku?",
+      "Apa yang paling kamu syukuri dari hubungan kita?",
+      "Apa kejutan sederhana yang paling kamu sukai?",
+      "Apa kebiasaan baik yang ingin kita bangun bersama?",
+      "Apa yang membuat hubungan kita terasa berbeda?",
+      "Apa yang ingin kamu ceritakan kepadaku lebih sering?",
+      "Apa yang harus kita lakukan saat sedang berbeda pendapat?",
+      "Apa momen yang membuatmu sadar bahwa aku penting bagimu?",
+      "Apa bentuk dukungan yang paling kamu butuhkan dariku?",
+      "Apa hal yang ingin kita coba untuk pertama kalinya?",
+      "Apa harapanmu untuk hubungan kita tahun depan?",
+      "Apa yang membuatmu nyaman menjadi diri sendiri denganku?",
+      "Apa hal yang ingin kamu pertahankan dari hubungan ini?",
+      "Bagaimana cara kita menjaga komunikasi tetap baik?",
+      "Apa satu kenangan baru yang ingin kita ciptakan?",
+      "Lengkapi kalimat ini: Aku bahagia bersamamu karena..."
+    ]
+  }
+};
+
+
+
+const quiz = [
+  { q: "Apa warna favorit pasanganmu?", a: ["Merah", "Biru", "Hitam", "Pink"] },
+  { q: "Apa makanan favorit pasanganmu?", a: ["Mie", "Bakso", "Mie Ayam", "Seblak"] },
+  { q: "Apa pilihan kencan favoritnya?", a: ["Nonton", "Kulineran", "Jalan-jalan", "Di rumah"] },
+  { q: "Apa yang paling membuat pasangan tertawa?", a: ["Jokes receh", "Video lucu", "Tingkahmu", "Cerita teman"] },
+  { q: "Apa hadiah yang paling disukai pasangan?", a: ["Surat", "Makanan", "Bunga", "Waktu bersama"] },
+  { q: "Ke mana pasangan ingin pergi berlibur?", a: ["Pantai", "Gunung", "Kota", "Di rumah"] },
+  { q: "Apa minuman favorit pasangan?", a: ["Kopi", "Teh", "Cokelat", "Jus"] },
+  { q: "Apa yang biasanya dilakukan pasangan saat bosan?", a: ["Tidur", "Main HP", "Makan", "Mengobrol"] },
+  { q: "Apa yang paling dibutuhkan pasangan saat sedih?", a: ["Didengarkan", "Ditemani", "Waktu sendiri", "Dihibur"] },
+  { q: "Apa genre film favorit pasangan?", a: ["Romantis", "Komedi", "Horor", "Aksi"] },
+  { q: "Apa yang paling pasangan hindari saat bertengkar?", a: ["Didiamkan", "Dibentak", "Disalahkan", "Ditinggalkan"] },
+  { q: "Apa hal yang paling pasangan sukai darimu?", a: ["Senyum", "Perhatian", "Humor", "Sikap"] },
+  { q: "Apa waktu favorit pasangan untuk mengobrol?", a: ["Pagi", "Siang", "Sore", "Malam"] },
+  { q: "Apa hadiah ulang tahun yang paling diharapkan?", a: ["Barang", "Makanan", "Surprise", "Waktu bersama"] },
+  { q: "Apa yang membuat pasangan merasa dicintai?", a: ["Pujian", "Perhatian", "Bantuan", "Kebersamaan"] },
+  { q: "Apa kegiatan yang paling disukai pasangan saat akhir pekan?", a: ["Tidur", "Jalan-jalan", "Main game", "Kulineran"] },
+  { q: "Apa yang paling membuat pasangan kesal?", a: ["Menunggu", "Lupa janji", "Diabaikan", "Salah paham"] },
+  { q: "Apa impian pasangan untuk masa depan?", a: ["Karier", "Liburan", "Rumah nyaman", "Usaha sendiri"] },
+  { q: "Apa yang paling pasangan ingat dari kencan pertama?", a: ["Tempat", "Obrolan", "Makanan", "Perasaan"] },
+  { q: "Kalau punya satu hari libur bersama, pasangan memilih apa?", a: ["Maraton film", "Wisata", "Masak bersama", "Main game"] }
+];
+
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  $(id).classList.add("active");
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+function startGame() {
+  const a = $("name1").value.trim();
+  const b = $("name2").value.trim();
+
+  if (!a || !b) {
+    alert("Isi nama kalian berdua dulu ya! 💗");
+    return;
+  }
+  names = [a, b];
+  scores = [0, 0];
+  turn = 0;
+  updateScore();
+  showScreen("menu");
+}
+
+function updateScore() {
+  $("mini1").textContent = names[0] + " · " + scores[0] + " poin";
+  $("mini2").textContent = names[1] + " · " + scores[1] + " poin";
+  $("scoreName1").textContent = names[0];
+  $("scoreName2").textContent = names[1];
+  $("score1").textContent = scores[0];
+  $("score2").textContent = scores[1];
+}
+
+function updateTurn() {
+  $("turnLabel").textContent = "Giliran: " + names[turn] + " 💗";
+}
+
+function openGame(which) {
+  mode = which;
+  currentCard = "";
+  busy = false;
+  $("wheelArea").classList.toggle("hidden", which !== "wheel");
+  $("quizArea").classList.toggle("hidden", which !== "quiz");
+  $("standardActions").classList.toggle("hidden", which === "quiz");
+  $("quizActions").classList.toggle("hidden", which !== "quiz");
+
+  const titles = {
+    wheel: "🎡 Roda Keberuntungan",
+    truth: "💬 Truth or Dare",
+    quiz: "🧩 Cocokologi Pasangan",
+    romance: "💌 Kartu Romantis",
+    dare: "🔥 Misi Bucin",
+    punish: "😂 Hukuman Acak"
+  };
+  $("gameTitle").textContent = titles[which];
+  $("cardEmoji").textContent = "💗";
+  $("question").textContent = which === "quiz"
+    ? "Tebak jawaban pasanganmu! Jawaban terbaik menurut pasangan, bukan menurut Google 😆"
+    : "Tekan tombol untuk mengambil tantangan!";
+  updateTurn();
+
+  if (which === "quiz") startQuiz();
+  showScreen("play");
+}
+
+function drawCard(type) {
+  if (busy) return;
+
+  let actual = type || mode;
+  if (actual === "wheel") {
+    actual = ["truth", "dare", "punish", "dare", "romance", "truth"]
+      [Math.floor(Math.random() * 6)];
+  }
+
+  const group = cards[actual];
+  if (!group) return;
+
+  const item = group.items[Math.floor(Math.random() * group.items.length)];
+  currentCard = item;
+  $("cardEmoji").textContent = group.emoji;
+  $("question").textContent = item;
+}
+
+function completeTask() {
+  if (mode === "quiz") return;
+  if (!currentCard) {
+    alert("Ambil kartu dulu sebelum mengklaim poin ya! 😆");
+    return;
+  }
+  scores[turn]++;
+  updateScore();
+  alert("Mantap! +1 poin untuk " + names[turn] + " 💖");
+  nextTurn();
+  currentCard = "";
+  $("cardEmoji").textContent = "🎲";
+  $("question").textContent = "Ambil kartu berikutnya untuk mulai tantangan baru!";
+}
+
+function skipTask() {
+  currentCard = "";
+  nextTurn();
+  $("cardEmoji").textContent = "🎲";
+  $("question").textContent = "Tantangan dilewati! Ambil kartu baru ya.";
+}
+
+function nextTurn() {
+  turn = 1 - turn;
+  updateTurn();
+}
+
+const wheelModes = ["truth", "dare", "punish", "dare", "romance", "truth"];
+
+function spinWheel() {
+  if (busy) return;
+  busy = true;
+  $("spinBtn").disabled = true;
+  $("spinBtn").textContent = "Rodanya berputar...";
+
+  const chosen = Math.floor(Math.random() * 6);
+  const segmentAngle = 60;
+  const centerAngle = chosen * segmentAngle + segmentAngle / 2;
+  const targetMod = (360 - centerAngle) % 360;
+  const currentMod = ((wheelRotation % 360) + 360) % 360;
+  const delta = (targetMod - currentMod + 360) % 360;
+
+  wheelRotation += 360 * 5 + delta;
+  $("wheel").style.transform = "rotate(" + wheelRotation + "deg)";
+
+  setTimeout(() => {
+    busy = false;
+    $("spinBtn").disabled = false;
+    $("spinBtn").textContent = "Putar Lagi 🎡";
+    drawCard(wheelModes[chosen]);
+    $("question").textContent =
+      "Hasil roda: " + cards[wheelModes[chosen]].title + "! " + currentCard;
+  }, 4100);
+}
+
+function startQuiz() {
+  quizIndex = 0;
+  quizPoints = 0;
+  quizAnswered = false;
+  renderQuiz();
+}
+
+function renderQuiz() {
+  if (quizIndex >= quiz.length) {
+    finishQuiz();
+    return;
+  }
+
+  const item = quiz[quizIndex];
+  $("cardEmoji").textContent = "🧩";
+  $("question").textContent = item.q;
+  $("quizProgress").textContent = "Pertanyaan " + (quizIndex + 1) + " dari " + quiz.length;
+  $("progressBar").style.width = (quizIndex / quiz.length * 100) + "%";
+
+  const answers = $("answers");
+  answers.innerHTML = "";
+
+  item.a.forEach(answer => {
+    const button = document.createElement("button");
+    button.className = "btn light";
+    button.textContent = answer;
+    button.onclick = () => chooseAnswer(button, answer);
+    answers.appendChild(button);
+  });
+}
+
+function chooseAnswer(button, answer) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  document.querySelectorAll("#answers button").forEach(b => b.disabled = true);
+  button.classList.remove("light");
+  button.classList.add("purple");
+
+  $("question").textContent =
+    names[turn] + " memilih: " + answer +
+    ". Tanyakan pasangan apakah tebakanmu cocok! 💕";
+
+  const next = document.createElement("button");
+  next.className = "btn";
+  next.textContent = "Lanjut ➜";
+  next.onclick = () => {
+    const matched = confirm("Apakah jawabanmu cocok dengan jawaban pasangan?");
+    if (matched) quizPoints++;
+    quizIndex++;
+    quizAnswered = false;
+    renderQuiz();
+  };
+  $("answers").appendChild(next);
+}
+
+function finishQuiz() {
+  scores[turn] += quizPoints;
+  updateScore();
+  $("progressBar").style.width = "100%";
+  $("cardEmoji").textContent = "💞";
+  $("question").textContent =
+    "Kuis selesai! " + names[turn] + " mendapat " +
+    quizPoints + " dari " + quiz.length + " poin kecocokan!";
+  $("quizProgress").textContent = "Skor kecocokanmu sudah dihitung!";
+  $("answers").innerHTML = "";
+  $("quizActions").innerHTML =
+    '<button class="btn" onclick="startQuiz()">Main Kuis Lagi 🔄</button>' +
+    '<button class="btn light" onclick="exitQuiz()">Kembali ke Menu</button>';
+}
+
+function exitQuiz() {
+  $("quizActions").innerHTML =
+    '<button class="btn light" onclick="exitQuiz()">Keluar dari Kuis</button>';
+  showScreen("menu");
+}
+
+function changeNames() {
+  $("name1").value = names[0];
+  $("name2").value = names[1];
+  showScreen("home");
+}
+
+function resetAll() {
+  if (!confirm("Reset semua skor dan mulai dari awal?")) return;
+  scores = [0, 0];
+  turn = 0;
+  updateScore();
+  showScreen("menu");
+}
+
+window.addEventListener("beforeunload", () => {});
+</script>
+</body>
+</html>
